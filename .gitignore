@@ -1,0 +1,10 @@
+.bundle
+**/*.log
+tmp/**/*
+.idea/*
+*~
+.DS_Store
+.vagrant
+*.box
+log/*
+coverage/*

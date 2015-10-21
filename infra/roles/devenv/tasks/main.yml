@@ -1,0 +1,121 @@
+---
+  - name: Create directories
+    file: path={{item}} state=directory
+    with_items:
+      - "{{downloads}}"
+
+  - name: See if cross-compiler installed
+    stat: path=/usr/local/{{toolchain}}
+    register: cc_installed
+
+  - name: See if cross-compiler copied
+    stat: path="{{downloads}}/{{toolchain}}"
+    register: cc_copied
+    when: not cc_installed.stat.exists
+
+  - name: Copy cross compiler
+    copy: src={{toolchain}} dest={{downloads}}/{{toolchain}}
+    when: not cc_installed.stat.exists and not cc_copied.stat.exists
+
+  - name: Unarchive the cross compiler
+    sudo: true
+    unarchive: src={{downloads}}/{{toolchain}} dest=/usr/local copy=no mode="u=rwx,g=rwx,o=rwx"
+    when: not cc_installed.stat.exists
+
+  - name: Update fruitymesh-devenv project from git
+    git: repo=https://github.com/mwaylabs/fruitymesh-devenv.git dest={{nrf}} accept_hostkey=true
+
+  - name: See if JLink is installed
+    stat: path={{nrf}}/tools/jlink
+    register: jlink_installed
+
+  - name: See if Jlink has already been copied
+    stat: path={{downloads}}/JLink_MacOSX_V502f.pkg
+    register: jlink_copied
+
+  - name: Copy JLink
+    copy: src=JLink_MacOSX_V502f.pkg dest={{downloads}}
+    when: not jlink_installed.stat.exists and not jlink_copied.stat.exists
+
+  - name: Install JLink
+    shell: sudo installer -pkg {{downloads}}/JLink_MacOSX_V502f.pkg -target /
+    when: not jlink_installed.stat.exists
+
+  - name: See if Jlink symlink exists
+    stat: path={{nrf}}/tools/jlink
+    register: jlink_link
+
+  - name: See if SDK51 was downloaded
+    stat: path={{downloads}}/{{nrf51_sdk}}
+    register: sdk_zip
+
+  - name: Download the SDK51
+    copy: src={{nrf51_sdk}} dest={{downloads}}
+    when: not sdk_zip.stat.exists
+
+  - name: See if SDK51 was installed
+    stat: path={{nrf_sdk_9_0}}/components
+    register: sdk_unzipped
+
+  - name: Install SDK51
+    unarchive: src={{downloads}}/{{nrf51_sdk}} dest={{nrf_sdk_9_0}} mode="u=rw,g=r,o=r" copy=no
+    when: not sdk_unzipped.stat.exists
+
+  - name: See if SDK52 was downloaded
+    stat: path={{downloads}}/{{nrf52_sdk}}
+    register: sdk52_zip
+
+  - name: Download SDK52
+    copy: src={{nrf52_sdk}} dest={{downloads}}
+    when: not sdk52_zip.stat.exists
+
+  - name: See if SDK52 was installed
+    stat: path={{nrf52_sdk_9_0}}/components
+    register: sdk52_unzipped
+
+  - name: Install SDK52
+    unarchive: src={{downloads}}/{{nrf52_sdk}} dest={{nrf52_sdk_9_0}} mode="u=rw,g=r,o=r" copy=no
+    when: not sdk52_unzipped.stat.exists
+
+  - name: See if EHAL link exists
+    stat: path={{nrf}}/sdk/ehal_2015_09_08/ARM/CMSIS
+    register: ehal_link
+
+  - name: Update fruitymesh project from git
+    git: repo=https://github.com/mwaylabs/fruitymesh.git dest={{nrf}}/projects/fruitymesh accept_hostkey=true update=no
+
+  - name: Create nrf51 sdk latest symlink
+    file: src={{nrf_sdk_9_0}} dest={{nrf}}/sdk/nrf51_sdk_latest state=link
+
+  - name: Create nrf52 sdk latest symlink
+    file: src={{nrf52_sdk_9_0}} dest={{nrf}}/sdk/nrf52_sdk_latest state=link
+
+  - name: Create ehal latest symlink
+    file: src={{nrf}}/sdk/ehal_2015_09_08 dest={{nrf}}/sdk/ehal_latest state=link
+
+  - name: Fix path to GNU
+    lineinfile: dest={{nrf}}/sdk/nrf51_sdk_latest/components/toolchain/gcc/Makefile.posix regexp='^GNU_INSTALL_ROOT :=' line="GNU_INSTALL_ROOT := /usr/local/{{toolchain_base}}"
+
+  - name: Fix path to GNU
+    lineinfile: dest={{nrf}}/sdk/nrf52_sdk_latest/components/toolchain/gcc/Makefile.posix regexp='^GNU_INSTALL_ROOT :=' line="GNU_INSTALL_ROOT := /usr/local/{{toolchain_base}}"
+
+  - name: Copy patched header file
+    copy: src=nrf_svc.h dest={{nrf}}/sdk/nrf51_sdk_latest/components/softdevice/s130/headers/nrf_svc.h
+
+  - name: Create jlink symlink
+    file: src=/usr/local/bin/JLinkExe dest={{nrf}}/tools/jlink state=link
+    when: not jlink_link.stat.exists
+
+  - name: Include jlink in path
+    lineinfile: dest={{home}}/.bashrc line='export PATH=$PATH:/{{nrf}}/tools:' regexp='export PATH=$PATH:/{{nrf}}/tools:'
+
+  - name: Create EHAL symlink
+    file: src={{nrf}}/sdk/arm_cmsis_4_3/CMSIS dest={{nrf}}/sdk/ehal_latest/ARM/CMSIS state=link
+    when: not ehal_link.stat.exists
+
+  - name: Remove unnecessary files
+    file: path={{item}} state=absent
+    with_items:
+      - '"{{nrf}}/sdk/nrf_sdk_9_0/put_sdk_9_0_0 files here"'
+      - '"{{nrf}}/sdk/nrf52_sdk_9_0/put_nrf52_sdk_files here"'
+      - '"{{nrf}}/projects/put your project folders here"'
