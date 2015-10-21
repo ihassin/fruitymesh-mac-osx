@@ -9,6 +9,8 @@ Simply put, it has pre-downloaded installation files for
 * nrf51 and nrf52 SDK distributions
 * JLink flash utility
 
+It then uses [Ansible](http://www.ansible.com) to place the files in the correct places to enable you to use your Mac for [NRF51](https://github.com/NordicSemiconductor) and [FruityMesh](https://github.com/mwaylabs/fruitymesh) development.
+ 
 # Pre-requisites
 
 * You have sudo on your mac and you know its password
@@ -16,8 +18,12 @@ Simply put, it has pre-downloaded installation files for
 # Read before you leap
 
 Listen, this Ansible will run __locally__, on your beloved system. It does not set up a VM or anything.
+
 I, of course, think that the operations here are harmless (i.e. the script will extract toolchains and so forth), but __please__ take a look at the Ansible script to make sure you will not regret running it.
-If you are unsure, email me and I'll provide psychological support. Still unsure? Use a VM from [here](https://github.com/ihassin/fruitymesh-ubuntu-vm).
+
+If you are unsure, email me and I'll provide psychological support.
+
+Still unsure? Calm your nerves by using a VM from [here](https://github.com/ihassin/fruitymesh-ubuntu-vm).
 
 # Set up
 
