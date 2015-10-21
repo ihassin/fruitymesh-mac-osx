@@ -47,6 +47,10 @@ make clean all
 
 It should be nice and clean. Your image will be in ```_build/FruityMesh.hex```
 
+# Experimenting with FruityMesh
+
+Check out my modified [ping example](https://github.com/ihassin/fruitymesh-ping) that programs an RGB LED using GPIO pins to show signal strength status of connected devices on the mesh.
+
 # Contributing
 
 1. Fork it (https://github.com/ihassin/fruitymesh-mac-osx/fork)
