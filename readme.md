@@ -1,6 +1,8 @@
-# Intro 
+# Introduction
 
-This repo sets up your mac for [NRF51/NRF52](https://github.com/NordicSemiconductor) and [FruityMesh](https://github.com/mwaylabs/fruitymesh) development.
+This repo sets up [NRF51/NRF52](https://github.com/NordicSemiconductor) and [FruityMesh](https://github.com/mwaylabs/fruitymesh) development for your Mac.
+
+Please see [this repo](https://github.com/ihassin/fruitymesh-ubuntu-vm) if you want to develop from within an Ubuntu VM.
 
 # General steps
 
