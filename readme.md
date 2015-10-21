@@ -1,6 +1,6 @@
 # Intro 
 
-This repo sets up your mac for FruityMesh development
+This repo sets up your mac for [NRF51/NRF52](https://github.com/NordicSemiconductor) and [FruityMesh](https://github.com/mwaylabs/fruitymesh) development.
 
 # General steps
 
@@ -30,6 +30,20 @@ Still unsure? Calm your nerves by using a VM from [here](https://github.com/ihas
 ```bash
 ./go
 ```
+
+# Test it out
+
+The script installs all NRF related files under /Users/<you>/nrf.
+It installs the cross-compiler in /usr/local.
+
+Once Ansible completes, issue the following commands to see that everything installed correctly:
+
+```
+cd ~/nrf/projects/fruitymesh
+make clean all
+```
+
+It should be nice and clean. Your image will be in ```_build/FruityMesh.hex```
 
 # Contributing
 
