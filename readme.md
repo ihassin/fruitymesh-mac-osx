@@ -41,7 +41,7 @@ Still unsure? Calm your nerves by using a VM from [here](https://github.com/ihas
 
 # Code of conduct
 
-Our code of conduct is [here](https://github.com/ihassin/fruitymesh-mac-osx/blob/master/CODE_OF_CONDUCT.md).
+Our code of conduct is [here](https://github.com/ihassin/fruitymesh-mac-osx/blob/master/code_of_conduct.md).
 
 # License
 
